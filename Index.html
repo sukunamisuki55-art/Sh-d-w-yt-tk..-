@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shådøw YT</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }h1 { margin-bottom: 10px; }
+
+p {
+  max-width: 600px;
+  margin: 10px auto 20px;
+  line-height: 1.6;
+}
+
+.upload { margin-bottom: 20px; }
+
+.video-box { margin-bottom: 30px; }
+
+video {
+  width: 80%;
+  max-width: 600px;
+  border-radius: 12px;
+  display: block;
+  margin: 10px auto;
+}
+
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+  </style>
+</head>
+<body>
+  <h1>Welcome to Shådøw YT Web</h1>  <p>
+    Here is where we host tournaments, giveaways, and other beneficiary stuff.
+    Visit here to check for more updates on giveaways.
+  </p>  <div class="upload">
+    <input type="file" id="videoUpload" accept="video/*" multiple>
+  </div>  <div id="videoContainer"></div>  <script>
+    const upload = document.getElementById('videoUpload');
+    const container = document.getElementById('videoContainer');
+
+    // Load saved videos
+    window.onload = () => {
+      const saved = JSON.parse(localStorage.getItem('videos') || '[]');
+      saved.forEach(v => addVideo(v.name, v.data));
+    };
+
+    upload.addEventListener('change', function () {
+      const files = this.files;
+      let saved = JSON.parse(localStorage.getItem('videos') || '[]');
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const videoData = e.target.result;
+
+          saved.push({ name: file.name, data: videoData });
+          localStorage.setItem('videos', JSON.stringify(saved));
+
+          addVideo(file.name, videoData);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function addVideo(name, data) {
+      const box = document.createElement('div');
+      box.className = 'video-box';
+
+      const title = document.createElement('h3');
+      title.textContent = name;
+
+      const video = document.createElement('video');
+      video.src = data;
+      video.controls = true;
+
+      box.appendChild(title);
+      box.appendChild(video);
+      container.appendChild(box);
+    }
+  </script></body>
+</html>
